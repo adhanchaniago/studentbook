@@ -1,0 +1,128 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="web design, website development, web application development, print design, database development, ecommerce websites, search engine optimization, packaging design" />
+<meta name="description" content="Design Chemical, Bangkok provides web design, website development, web application development, print design, database development, ecommerce websites, search engine optimization &amp; packaging design." />
+<meta name="robots" content="all" />
+<title>jQuery Example - Check Passwords Match - Design Chemical Bangkok</title>
+<link href="/css/style.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="http://www.designchemical.com/favicon.ico" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	var $loading = $('<div class="loading"><img src="/media/images/loading.gif" alt="" /></div>');
+	$(".default").each(function(){
+		var defaultVal = $(this).attr('title');
+		$(this).focus(function(){
+			if ($(this).val() == defaultVal){
+				$(this).removeClass('active').val('');
+			}
+		});
+		$(this).blur(function() {
+			if ($(this).val() == ''){
+				$(this).addClass('active').val(defaultVal);
+			}
+		})
+		.blur().addClass('active');
+	});
+	$('.btn-submit').click(function(e){
+		var $formId = $(this).parents('form');
+		var formAction = $formId.attr('action');
+		defaulttextRemove();
+		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+		$('li',$formId).removeClass('error');
+		$('span.error').remove();
+		$('.required',$formId).each(function(){
+			var inputVal = $(this).val();
+			var $parentTag = $(this).parent();
+			if(inputVal == ''){
+				$parentTag.addClass('error').append('<span class="error">Required field</span>');
+			}
+			if($(this).hasClass('email') == true){
+				if(!emailReg.test(inputVal)){
+					$parentTag.addClass('error').append('<span class="error">Enter a valid email address.</span>');
+				}
+			}
+		});
+		if ($('span.error').length == "0") {
+			$formId.append($loading.clone());
+			$('fieldset',$formId).hide();
+			$.post(formAction, $formId.serialize(),function(data){
+				$('.loading').remove();
+				$formId.append(data).fadeIn();
+			});
+		}
+		e.preventDefault();
+	});
+});
+function defaulttextRemove(){
+	$('.default').each(function(){
+		var defaultVal = $(this).attr('title');
+		if ($(this).val() == defaultVal){
+			$(this).val('');
+		}
+	});
+}
+</script>
+
+<style type="text/css">
+/*Form styles*/
+.styled {font-family: Arial, sans-serif;}
+.styled fieldset {border: 1px solid #ccc; padding: 10px;}
+.styled fieldset legend {font-size: 14px; font-weight: bold; color: #000; text-transform: capitalize; padding: 5px 10px; background: #fff; display: block; margin-bottom: 0; border: 1px solid #ccc;}
+.styled fieldset ol, .styled fieldset ol li {list-style: none;}
+.styled fieldset li.form-row {margin-bottom: 3px; padding: 2px 0; width: 100%; overflow: hidden; position: relative;}
+.styled label {font-size: 12px; display: block; font-weight: bold; float: left; width: 100px; margin-left: 5px; line-height: 24px;}
+.styled input.text-input, .styled .text-area {background: #fefefe; border-top: 1px solid #909090; border-right: 1px solid #cecece; border-bottom: 1px solid #e1e1e1; border-left: 1px solid #bbb; padding: 3px; width: 220px; font-size: 12px;}
+.styled input.text-input.default.active, .styled .text-area.default.active {color: #666666; font-style: italic;}
+.styled fieldset li.button-row {margin-bottom: 0; padding: 2px 5px;}
+form input.btn-submit {padding: 3px 7px; font-family: Arial, sans-serif; color: #000; font-weight: bold; border: 1px solid #000; background: #FFE220; font-size: 12px;}
+
+/* Form Validation */
+.styled span.error {font-size: 11px; background: none; display: block; padding: 2px; text-align: center;}
+.styled fieldset li.error {color: #D8000C; background: #fff0f0 url(../media/images/checkers.png) repeat; border: 1px solid #f9c7c7; padding: 5px 0;}
+.styled fieldset li.error label {text-align: left;}
+
+/* Specific Form Rules */
+#form-contact {width: 360px; margin: 0 auto;}
+
+.success {order: 1px solid; margin: 0; padding: 10px; text-align: center; color: #4F8A10; background-color: #ebf6d9; border-color: #DFF2BF;}
+</style>
+</head>
+<body id="demo">
+<div id="stick">
+  <div id="wrap-content">
+    <div id="content">
+	  <div class="page wrap sidecol">
+	  	  <form id="form-contact" class="styled" action="test_submit.htm" method="post">
+		    <fieldset>
+			  <legend>Contact Form</legend>
+			  <ol>
+			    <li class="form-row">
+				  <label>Email:</label>
+				  <input id="input-email" type="text" class="text-input required email default" name="email" value="" title="Enter Your Email Address" />
+				</li>
+				<li class="form-row">
+				  <label>Name:</label>
+				  <input id="input-name" type="text" class="text-input required default" name="name" value="" title="Enter Your Full Name" />
+				</li>
+				<li class="form-row">
+				  <label>Phone:</label>
+				  <input id="input-phone" type="text" class="text-input" name="phone" value="" />
+				</li>
+				<li class="form-row">
+				  <label>Comments:</label>
+				  <textarea id="input-message" class="text-area" name="message" cols="40" rows="8"></textarea>
+				</li>
+				<li class="button-row text-right">
+				  <input class="btn-submit" type="submit" value="submit" name="submit" />
+				</li>
+			  </ol>
+			</fieldset>
+		  </form>
+		
+	  </div>
+	  <div class="col-side float-right">
